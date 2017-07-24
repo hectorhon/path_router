@@ -1,6 +1,6 @@
 [package]
 name = "path-router"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Hector Hon <hon.lianhung@gmail.com>"]
 description = "Routing for paths delimited by a forward slash, with the ability to capture specified path segments."
 license = "MIT"
