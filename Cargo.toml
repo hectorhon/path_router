@@ -7,4 +7,4 @@ license-file = "LICENSE"
 repository = "https://github.com/hectorhon/path_router"
 
 [dependencies]
-log = "*"
+log = "0.3.8"
