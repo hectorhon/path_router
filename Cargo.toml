@@ -1,0 +1,7 @@
+[package]
+name = "path-router"
+version = "0.1.0"
+authors = ["Hector Hon <hon.lianhung@gmail.com>"]
+
+[dependencies]
+log = "*"
