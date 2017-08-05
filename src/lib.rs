@@ -9,7 +9,7 @@
 //! routes.add("GET/user/:username/profile", "profile.html");
 //! assert_eq!(
 //!     routes.find("GET/user/my_name/profile"),
-//!     Some((&"profile.html", vec![("username", String::from("my_name"))])));
+//!     Some((&"profile.html", vec![("username", "my_name")])));
 //! ```
 
 #[macro_use] extern crate log;
@@ -96,7 +96,10 @@ impl<'a, T> Tree<'a, T> {
     }
     /// Retrieve the value associated with the path, together with the captured
     /// path segments.
-    pub fn find(&self, key: &str) -> Option<(&T, Vec<(&'a str, String)>)> {
+    pub fn find<'b>(
+        &self,
+        key: &'b str
+        ) -> Option<(&T, Vec<(&'a str, &'b str)>)> {
         let segments: Vec<&str> = key.split('/')
             .filter(|s| !s.is_empty())
             .collect();
@@ -106,15 +109,18 @@ impl<'a, T> Tree<'a, T> {
                 (v, labels.iter().cloned().zip(captured).collect())
             })
     }
-    fn find_(&self, segments: &[&str],
-             captured: &mut Vec<String>) -> Option<&(T, Vec<&'a str>)> {
+    fn find_<'b>(
+        &self,
+        segments: &[&'b str],
+        captured: &mut Vec<&'b str>
+        ) -> Option<&(T, Vec<&'a str>)> {
         match segments.split_first() {
             None => self.value.as_ref(),
             Some((&segment, remaining)) => self.branches.iter().filter_map(|t| {
                 if t.label == segment {
                     t.find_(remaining, captured)
                 } else if t.label == "" {
-                    captured.push(String::from(segment));
+                    captured.push(segment);
                     let result = t.find_(remaining, captured);
                     if result.is_none() {
                         captured.pop();
@@ -163,21 +169,21 @@ mod tests {
         assert_eq!(routes.find("/user/myname/cook/throw"), None);
         assert_eq!(
             routes.find("/user/myname"),
-            Some((&11, vec![("username", String::from("myname"))])));
+            Some((&11, vec![("username", "myname")])));
         assert_eq!(
             routes.find("/user/myname/profile"),
-            Some((&112, vec![("username", String::from("myname"))])));
+            Some((&112, vec![("username", "myname")])));
         assert_eq!(
             routes.find("/user/myname/cook/show"),
             Some((&111, vec![
-                  ("username", String::from("myname")),
-                  ("intent", String::from("cook"))
+                  ("username", "myname"),
+                  ("intent", "cook")
             ])));
     }
     #[test]
     fn can_add_and_capture_and_find_handlers() {
         let mut routes = Tree::new();
-        let handler = |captured: Vec<(&str, String)>| {
+        let handler = |captured: Vec<(&str, &str)>| {
             assert_eq!(captured.len(), 2);
             assert_eq!(captured[0].0, "folder");
             assert_eq!(captured[0].1, "myfolder");
