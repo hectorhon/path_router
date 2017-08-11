@@ -12,8 +12,6 @@
 //!     Some((&"profile.html", vec![("username", "my_name")])));
 //! ```
 
-#[macro_use] extern crate log;
-
 /// The routing information is stored as a trie.
 ///
 /// # Description

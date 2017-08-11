@@ -1,8 +1,6 @@
 # path_router
 Routing for paths delimited by a forward slash, with the ability to capture specified path segments.
 
-It has only a single dependency on the [log](https://crates.io/crates/log) facade (which is actually "optional" too).
-
 # Example
 Routing for the [Hyper](https://crates.io/crates/hyper) server:
 
