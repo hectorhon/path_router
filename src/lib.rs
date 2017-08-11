@@ -43,7 +43,6 @@ impl<'a, T> Tree<'a, T> {
     /// Panics if a duplicate route is added.
     ///
     pub fn add(&mut self, key: &'a str, value: T) {
-        info!("Adding route {}", key);
         let segments = key.split('/').filter(|s| !s.is_empty());
         let capture_labels = Vec::new();    // Will be filled while iterating
         self.add_(segments, value, capture_labels);
@@ -54,7 +53,6 @@ impl<'a, T> Tree<'a, T> {
         match segments.next() {
             None => {
                 if self.value.is_some() {
-                    error!("Duplicate route!");
                     panic!("Duplicate route!");
                 }
                 self.value = Some((value, capture_labels))
